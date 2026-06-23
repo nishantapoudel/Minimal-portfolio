@@ -65,7 +65,7 @@ To view this portfolio on your local machine:
 
 ## 📬 Contact
 
-* **Email:** [nishantapoudel155@gmail.com](mailto:nishantapoudel155@gmail.com)
+* **Email:** [nishantapdl@gmail.com](mailto:nishantapdl@gmail.com)
 * **Portfolio:** [nishantapoudel.com.np](https://nishantapoudel.com.np/)
 
 ---
