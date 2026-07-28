@@ -2,7 +2,7 @@
 
 [![Website](https://img.shields.io/badge/Website-Live-brightgreen?style=flat-square&logo=google-chrome)](https://nishantapoudel.com.np/)
 [![LinkedIn](https://img.shields.io/badge/LinkedIn-Connect-blue?style=flat-square&logo=linkedin)](https://www.linkedin.com/in/nishanta-poudel/)
-[![GitHub](https://img.shields.io/badge/GitHub-Follow-black?style=flat-square&logo=github)](https://github.com/nishantnn)
+[![GitHub](https://img.shields.io/badge/GitHub-Follow-black?style=flat-square&logo=github)](https://github.com/nishantapoudel)
 
 > **Electronics, Communication, and Information Engineering Student** at IOE, Thapathali Campus.
 > Building systems at the intersection of hardware, software, and automation.
@@ -51,7 +51,7 @@ To view this portfolio on your local machine:
 
 1.  **Clone the repository:**
     ```bash
-    git clone [https://github.com/nishantnn/portfolio.git](https://github.com/nishantnn/portfolio.git)
+    git clone [https://github.com/nishantapoudel/portfolio.git](https://github.com/nishantapoudel/portfolio.git)
     ```
 
 2.  **Navigate to the folder:**
