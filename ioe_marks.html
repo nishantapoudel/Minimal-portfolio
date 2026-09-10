@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Internal Marks Scaling & Pass/Fail Calculator</title>
+    <title>IOE Internal Marks Scaling Calculator | TU Revised Syllabus</title>
     <style>
         :root {
             --bg-color: #f8fafc;
@@ -12,6 +12,7 @@
             --text-muted: #64748b;
             --border-color: #e2e8f0;
             --primary: #0284c7;
+            --primary-hover: #0369a1;
             --success-bg: #f0fdf4;
             --success-border: #bbf7d0;
             --success-text: #166534;
@@ -21,93 +22,303 @@
             --danger-bg: #fef2f2;
             --danger-border: #fecaca;
             --danger-text: #991b1b;
-            --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
         }
 
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { font-family: var(--font-family); background-color: var(--bg-color); color: var(--text-main); line-height: 1.5; padding: 24px 16px; }
-        .container { max-width: 900px; margin: 0 auto; }
-        header { text-align: center; margin-bottom: 32px; }
-        header h1 { font-size: 1.85rem; font-weight: 700; color: var(--text-main); }
-        header p { color: var(--text-muted); font-size: 0.95rem; margin-top: 6px; }
-        .grid-layout { display: grid; grid-template-columns: 1fr; gap: 24px; }
-        @media (min-width: 768px) { .grid-layout { grid-template-columns: 1fr 1fr; } }
-        .card { background-color: var(--card-bg); border: 1px solid var(--border-color); border-radius: 12px; padding: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
-        .card-title { font-size: 1.1rem; font-weight: 600; margin-bottom: 16px; border-bottom: 1px solid var(--border-color); padding-bottom: 8px; }
-        .form-group { margin-bottom: 18px; }
-        .form-group label { display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 6px; }
-        .form-control, .form-select { width: 100%; padding: 10px 12px; font-size: 0.95rem; border: 1px solid var(--border-color); border-radius: 6px; background-color: #fff; }
-        .marks-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-        .status-box { padding: 16px; border-radius: 8px; margin-bottom: 20px; border: 1px solid transparent; }
-        .status-box.safe { background-color: var(--success-bg); border-color: var(--success-border); color: var(--success-text); }
-        .status-box.deducted { background-color: var(--warning-bg); border-color: var(--warning-border); color: var(--warning-text); }
-        .status-box.failed { background-color: var(--danger-bg); border-color: var(--danger-border); color: var(--danger-text); }
-        .status-box .status-title { font-weight: 700; font-size: 1rem; margin-bottom: 4px; display: flex; justify-content: space-between; }
-        .metric-list { display: flex; flex-direction: column; gap: 12px; }
-        .metric-item { display: flex; justify-content: space-between; padding-bottom: 8px; border-bottom: 1px dashed var(--border-color); font-size: 0.9rem; }
-        .metric-label { color: var(--text-muted); }
-        .metric-val { font-weight: 600; }
-        .metric-val.highlight { font-size: 1.15rem; color: var(--primary); }
-        .metric-val.deduction { color: #dc2626; }
-        .metric-val.ng-status { color: #dc2626; font-weight: 800; background-color: #fee2e2; padding: 2px 8px; border-radius: 4px; }
-        .metric-val.pass-status { color: #166534; font-weight: 800; background-color: #dcfce7; padding: 2px 8px; border-radius: 4px; }
-        .formula-box { margin-top: 24px; background-color: #f1f5f9; padding: 16px; border-radius: 8px; font-size: 0.85rem; font-family: monospace; color: #334155; white-space: pre-wrap; }
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: var(--font-family);
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            line-height: 1.5;
+            padding: 24px 16px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+
+        header h1 {
+            font-size: 1.85rem;
+            font-weight: 700;
+            color: var(--text-main);
+            letter-spacing: -0.02em;
+        }
+
+        header p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            margin-top: 6px;
+        }
+
+        .badge-tu {
+            display: inline-block;
+            background-color: #e0f2fe;
+            color: #0369a1;
+            font-size: 0.75rem;
+            font-weight: 600;
+            padding: 3px 10px;
+            border-radius: 9999px;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .grid-layout {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 24px;
+        }
+
+        @media (min-width: 768px) {
+            .grid-layout {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        .card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+
+        .card-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 16px;
+            color: var(--text-main);
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 8px;
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-main);
+            margin-bottom: 6px;
+        }
+
+        .form-control, .form-select {
+            width: 100%;
+            padding: 10px 12px;
+            font-size: 0.95rem;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            background-color: #fff;
+            color: var(--text-main);
+            transition: border-color 0.15s ease;
+        }
+
+        .form-control:focus, .form-select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.15);
+        }
+
+        .marks-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .status-box {
+            padding: 16px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border: 1px solid transparent;
+        }
+
+        .status-box.safe {
+            background-color: var(--success-bg);
+            border-color: var(--success-border);
+            color: var(--success-text);
+        }
+
+        .status-box.deducted {
+            background-color: var(--warning-bg);
+            border-color: var(--warning-border);
+            color: var(--warning-text);
+        }
+
+        .status-box .status-title {
+            font-weight: 700;
+            font-size: 1rem;
+            margin-bottom: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .status-box .status-desc {
+            font-size: 0.85rem;
+            line-height: 1.4;
+        }
+
+        .metric-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .metric-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 8px;
+            border-bottom: 1px dashed var(--border-color);
+            font-size: 0.9rem;
+        }
+
+        .metric-label {
+            color: var(--text-muted);
+        }
+
+        .metric-val {
+            font-weight: 600;
+            color: var(--text-main);
+        }
+
+        .metric-val.highlight {
+            font-size: 1.15rem;
+            color: var(--primary);
+        }
+
+        .metric-val.deduction {
+            color: #dc2626;
+        }
+
+        .formula-box {
+            margin-top: 24px;
+            background-color: #f1f5f9;
+            padding: 16px;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            font-family: monospace;
+            color: #334155;
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+
+        .doc-section {
+            margin-top: 32px;
+        }
+
+        .doc-section h2 {
+            font-size: 1.25rem;
+            margin-bottom: 12px;
+        }
+
+        .doc-section p, .doc-section ul {
+            font-size: 0.9rem;
+            color: #475569;
+            margin-bottom: 12px;
+        }
+
+        .doc-section ul {
+            padding-left: 20px;
+        }
+
+        code {
+            background-color: #e2e8f0;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 0.85em;
+        }
     </style>
 </head>
 <body>
 
 <div class="container">
     <header>
-        <h1>Internal Marks Scaling & Evaluation Calculator</h1>
-        <p>Evaluates pass/fail status (NG check) and internal mark deductions under the 20% Gap Rule.</p>
+        <span class="badge-tu">IOE / Tribhuvan University Rules</span>
+        <h1>Internal Marks Scaling Calculator</h1>
+        <p>Evaluates theory internal mark deductions based on final board exam performance under the IOE 20% Threshold Rule.</p>
     </header>
 
     <div class="grid-layout">
+        <!-- INPUT CARD -->
         <div class="card">
             <h2 class="card-title">1. Exam Performance Inputs</h2>
+            
             <div class="form-group">
-                <label for="schemeSelect">Subject Scheme</label>
+                <label for="schemeSelect">Subject Scheme (IOE Syllabus)</label>
                 <select id="schemeSelect" class="form-select" onchange="handleSchemeChange()">
-                    <option value="60-40" selected>60 Board / 40 Internal</option>
-                    <option value="80-20">80 Board / 20 Internal</option>
-                    <option value="custom">Custom Scheme</option>
+                    <option value="60-40" selected>New IOE Scheme (60 Final Board / 40 Internal)</option>
+                    <option value="80-20">Classic IOE Scheme (80 Final Board / 20 Internal)</option>
+                    <option value="custom">Custom Marks Scheme</option>
                 </select>
             </div>
+
             <div class="form-group">
-                <label>Final Board Theory Exam (Min 40% to Pass)</label>
+                <label>Final Board Theory Exam</label>
                 <div class="marks-row">
-                    <input type="number" id="boardObtained" class="form-control" placeholder="Obtained" value="20" min="0" oninput="calculateMarks()">
-                    <input type="number" id="boardFull" class="form-control" value="60" min="1" readonly oninput="calculateMarks()">
+                    <div>
+                        <input type="number" id="boardObtained" class="form-control" placeholder="Marks Obtained" value="35" min="0" oninput="calculateMarks()">
+                        <small style="font-size: 0.75rem; color: var(--text-muted);">Score Obtained</small>
+                    </div>
+                    <div>
+                        <input type="number" id="boardFull" class="form-control" value="60" min="1" readonly oninput="calculateMarks()">
+                        <small style="font-size: 0.75rem; color: var(--text-muted);">Full Marks</small>
+                    </div>
                 </div>
             </div>
+
             <div class="form-group">
-                <label>Internal Assessment (Min 40% to Pass)</label>
+                <label>Internal Theory Assessment</label>
                 <div class="marks-row">
-                    <input type="number" id="internalObtained" class="form-control" placeholder="Obtained" value="35" min="0" oninput="calculateMarks()">
-                    <input type="number" id="internalFull" class="form-control" value="40" min="1" readonly oninput="calculateMarks()">
+                    <div>
+                        <input type="number" id="internalObtained" class="form-control" placeholder="Marks Obtained" value="35" min="0" oninput="calculateMarks()">
+                        <small style="font-size: 0.75rem; color: var(--text-muted);">Score Obtained</small>
+                    </div>
+                    <div>
+                        <input type="number" id="internalFull" class="form-control" value="40" min="1" readonly oninput="calculateMarks()">
+                        <small style="font-size: 0.75rem; color: var(--text-muted);">Full Marks</small>
+                    </div>
                 </div>
+            </div>
+
+            <div style="margin-top: 16px; padding: 12px; background: #f8fafc; border-radius: 6px; font-size: 0.8rem; color: var(--text-muted);">
+                <strong>Rule Summary:</strong> Internal percentage ($P_{int}$) can be up to 20% higher than Board percentage ($P_{board}$) without penalty. Any excess gap triggers a 2% deduction from internal marks for every 1% excess gap.
             </div>
         </div>
 
+        <!-- RESULTS CARD -->
         <div class="card">
-            <h2 class="card-title">2. Evaluation Status</h2>
-            <div id="statusBox" class="status-box failed">
+            <h2 class="card-title">2. Evaluation & Reality Check</h2>
+
+            <div id="statusBox" class="status-box safe">
                 <div class="status-title">
-                    <span id="statusHeading">RESULT: NG (NON-GRADED / FAILED)</span>
+                    <span id="statusHeading">Safe Zone</span>
+                    <span id="statusBadge" style="font-size: 0.8rem; font-weight: normal;">0% Deduction</span>
                 </div>
-                <div id="statusText" class="status-desc">Score below pass threshold.</div>
+                <div id="statusText" class="status-desc">Your internal score is within the allowed 20% gap margin.</div>
             </div>
+
             <div class="metric-list">
                 <div class="metric-item">
-                    <span class="metric-label">Academic Status:</span>
-                    <span id="resAcademicStatus" class="metric-val ng-status">NG (FAILED)</span>
-                </div>
-                <div class="metric-item">
-                    <span class="metric-label">Board Percentage:</span>
+                    <span class="metric-label">Board Exam Percentage:</span>
                     <span id="resBoardPct" class="metric-val">0%</span>
                 </div>
                 <div class="metric-item">
-                    <span class="metric-label">Internal Percentage:</span>
+                    <span class="metric-label">Internal Assessment Percentage:</span>
                     <span id="resInternalPct" class="metric-val">0%</span>
                 </div>
                 <div class="metric-item">
@@ -115,60 +326,109 @@
                     <span id="resGap" class="metric-val">0%</span>
                 </div>
                 <div class="metric-item">
+                    <span class="metric-label">Allowed Margin:</span>
+                    <span class="metric-val">20.00%</span>
+                </div>
+                <div class="metric-item">
+                    <span class="metric-label">Deduction Penalty Factor:</span>
+                    <span id="resPenaltyFactor" class="metric-val deduction">0%</span>
+                </div>
+                <div class="metric-item">
+                    <span class="metric-label">Original Internal Score:</span>
+                    <span id="resOrigInternal" class="metric-val">0 / 0</span>
+                </div>
+                <div class="metric-item">
                     <span class="metric-label">Adjusted Internal Score:</span>
                     <span id="resAdjInternal" class="metric-val highlight">0 / 0</span>
                 </div>
-                <div class="metric-item">
-                    <span class="metric-label">Total Score:</span>
-                    <span id="resTotalScore" class="metric-val highlight">0 / 100</span>
+                <div class="metric-item" style="border-bottom: none; margin-top: 6px;">
+                    <span class="metric-label" style="font-weight: 700; color: var(--text-main);">Total Subject Score:</span>
+                    <span id="resTotalScore" class="metric-val highlight" style="color: #0369a1;">0 / 100</span>
                 </div>
             </div>
         </div>
     </div>
 
+    <!-- CALCULATION LOG CARD -->
     <div class="card" style="margin-top: 24px;">
-        <h2 class="card-title">3. Formula Log</h2>
+        <h2 class="card-title">3. Formula Breakdown & Calculation Log</h2>
         <div id="formulaLog" class="formula-box">Calculating...</div>
+    </div>
+
+    <!-- DOCUMENTATION SECTION -->
+    <div class="doc-section card">
+        <h2>Documented Rules & Code Architecture</h2>
+        <p>The calculation algorithm adheres to the official Institute of Engineering (IOE), Tribhuvan University semester evaluation standard:</p>
+        <ul>
+            <li><code>P_board = (Board Obtained / Board Full) * 100</code></li>
+            <li><code>P_internal = (Internal Obtained / Internal Full) * 100</code></li>
+            <li><code>Delta_P = P_internal - P_board</code></li>
+            <li>If <code>Delta_P <= 20</code>, <code>Penalty = 0%</code> and <code>Adjusted Internal = Original Internal</code>.</li>
+            <li>If <code>Delta_P > 20</code>, <code>Penalty = (Delta_P - 20) / 200</code>.</li>
+            <li><code>Adjusted Internal = Original Internal * (1 - Penalty)</code>.</li>
+        </ul>
+        <p><em>Note: Theory pass marks require a minimum of 40% in board exam obtained score prior to adding internal marks.</em></p>
     </div>
 </div>
 
 <script>
+    /**
+     * IOE 20% Threshold Rule Calculation Logic
+     * Standardized for Tribhuvan University Institute of Engineering
+     */
     function calculateIOEMarks(boardObtained, boardFull, internalObtained, internalFull) {
-        if (!boardFull || boardFull <= 0 || !internalFull || internalFull <= 0) return null;
+        // Prevent division by zero
+        if (!boardFull || boardFull <= 0 || !internalFull || internalFull <= 0) {
+            return null;
+        }
 
+        // Clamp obtained marks to non-negative and max full marks
         boardObtained = Math.max(0, Math.min(boardObtained, boardFull));
         internalObtained = Math.max(0, Math.min(internalObtained, internalFull));
 
-        const boardPassMark = 0.40 * boardFull;
-        const internalPassMark = 0.40 * internalFull;
-
-        const passedBoard = boardObtained >= boardPassMark;
-        const passedInternal = internalObtained >= internalPassMark;
-        const isOverallPassed = passedBoard && passedInternal;
-
+        // Step 1: Calculate percentages
         const boardPct = (boardObtained / boardFull) * 100;
         const internalPct = (internalObtained / internalFull) * 100;
+
+        // Step 2: Calculate percentage gap
         const deltaP = internalPct - boardPct;
 
+        // Step 3: Determine penalty factor
         let penaltyFactor = 0;
         let isDeducted = false;
 
         if (deltaP > 20) {
             isDeducted = true;
+            // Formula: Penalty = (DeltaP - 20) / 200
+            // Equivalent to: 0.5% deduction for every 1% gap above 20%
             penaltyFactor = (deltaP - 20) / 200;
         }
 
+        // Step 4: Calculate adjusted internal marks
         const marksDeducted = internalObtained * penaltyFactor;
         const adjustedInternal = internalObtained - marksDeducted;
+
+        // Step 5: Final aggregates
         const totalMarks = boardObtained + adjustedInternal;
         const totalFull = boardFull + internalFull;
+        const totalPct = (totalMarks / totalFull) * 100;
 
         return {
-            boardObtained, boardFull, boardPassMark, passedBoard,
-            internalObtained, internalFull, internalPassMark, passedInternal,
-            isOverallPassed, boardPct, internalPct, deltaP, isDeducted,
-            penaltyFactor, penaltyPct: penaltyFactor * 100, marksDeducted,
-            adjustedInternal, totalMarks, totalFull
+            boardObtained,
+            boardFull,
+            boardPct,
+            internalObtained,
+            internalFull,
+            internalPct,
+            deltaP,
+            isDeducted,
+            penaltyFactor,
+            penaltyPct: penaltyFactor * 100,
+            marksDeducted,
+            adjustedInternal,
+            totalMarks,
+            totalFull,
+            totalPct
         };
     }
 
@@ -178,13 +438,18 @@
         const internalFullInput = document.getElementById("internalFull");
 
         if (scheme === "60-40") {
-            boardFullInput.value = 60; boardFullInput.readOnly = true;
-            internalFullInput.value = 40; internalFullInput.readOnly = true;
+            boardFullInput.value = 60;
+            boardFullInput.readOnly = true;
+            internalFullInput.value = 40;
+            internalFullInput.readOnly = true;
         } else if (scheme === "80-20") {
-            boardFullInput.value = 80; boardFullInput.readOnly = true;
-            internalFullInput.value = 20; internalFullInput.readOnly = true;
-        } else {
-            boardFullInput.readOnly = false; internalFullInput.readOnly = false;
+            boardFullInput.value = 80;
+            boardFullInput.readOnly = true;
+            internalFullInput.value = 20;
+            internalFullInput.readOnly = true;
+        } else if (scheme === "custom") {
+            boardFullInput.readOnly = false;
+            internalFullInput.readOnly = false;
         }
         calculateMarks();
     }
@@ -196,61 +461,75 @@
         const internalFull = parseFloat(document.getElementById("internalFull").value) || 40;
 
         const res = calculateIOEMarks(boardObtained, boardFull, internalObtained, internalFull);
+
         if (!res) return;
 
-        document.getElementById("resBoardPct").textContent = `${res.boardPct.toFixed(2)}% (${res.boardObtained}/${res.boardFull})`;
-        document.getElementById("resInternalPct").textContent = `${res.internalPct.toFixed(2)}% (${res.internalObtained}/${res.internalFull})`;
+        // Update metric values
+        document.getElementById("resBoardPct").textContent = res.boardPct.toFixed(2) + "%";
+        document.getElementById("resInternalPct").textContent = res.internalPct.toFixed(2) + "%";
         document.getElementById("resGap").textContent = res.deltaP.toFixed(2) + "%";
+        document.getElementById("resPenaltyFactor").textContent = res.penaltyPct.toFixed(2) + "%";
+        document.getElementById("resOrigInternal").textContent = `${res.internalObtained.toFixed(2)} / ${res.internalFull}`;
         document.getElementById("resAdjInternal").textContent = `${res.adjustedInternal.toFixed(2)} / ${res.internalFull}`;
-        document.getElementById("resTotalScore").textContent = `${res.totalMarks.toFixed(2)} / ${res.totalFull}`;
+        document.getElementById("resTotalScore").textContent = `${res.totalMarks.toFixed(2)} / ${res.totalFull} (${res.totalPct.toFixed(2)}%)`;
 
+        // Update status box
         const statusBox = document.getElementById("statusBox");
         const statusHeading = document.getElementById("statusHeading");
+        const statusBadge = document.getElementById("statusBadge");
         const statusText = document.getElementById("statusText");
-        const resAcademicStatus = document.getElementById("resAcademicStatus");
-
-        if (!res.isOverallPassed) {
-            statusBox.className = "status-box failed";
-            statusHeading.textContent = "RESULT: NG (NON-GRADED / FAILED)";
-            resAcademicStatus.className = "metric-val ng-status";
-            resAcademicStatus.textContent = "NG (FAILED)";
-
-            let reasons = [];
-            if (!res.passedBoard) reasons.push(`Board Exam score (${res.boardObtained}) below 40% pass mark (${res.boardPassMark.toFixed(1)})`);
-            if (!res.passedInternal) reasons.push(`Internal score (${res.internalObtained}) below 40% pass mark (${res.internalPassMark.toFixed(1)})`);
-            statusText.innerHTML = reasons.join("<br>");
-        } else {
-            resAcademicStatus.className = "metric-val pass-status";
-            resAcademicStatus.textContent = "PASSED";
-
-            if (res.isDeducted) {
-                statusBox.className = "status-box deducted";
-                statusHeading.textContent = "RESULT: PASSED (WITH DEDUCTION)";
-                statusText.textContent = `Gap (${res.deltaP.toFixed(2)}%) > 20%. Internal score reduced from ${res.internalObtained} to ${res.adjustedInternal.toFixed(2)}.`;
-            } else {
-                statusBox.className = "status-box safe";
-                statusHeading.textContent = "RESULT: PASSED (SAFE ZONE)";
-                statusText.textContent = `Gap (${res.deltaP.toFixed(2)}%) within 20% margin. No deduction applied.`;
-            }
-        }
-
-        let logText = `PASS/FAIL CHECK:\n`;
-        logText += `  Board Pass Mark (40%): ${res.boardPassMark.toFixed(1)} -> ${res.passedBoard ? 'PASSED' : 'FAILED (NG)'}\n`;
-        logText += `  Internal Pass Mark (40%): ${res.internalPassMark.toFixed(1)} -> ${res.passedInternal ? 'PASSED' : 'FAILED (NG)'}\n`;
-        logText += `  Overall Status: ${res.isOverallPassed ? 'PASSED' : 'NG (FAILED)'}\n\n`;
-        logText += `GAP EVALUATION:\n`;
-        logText += `  Gap (ΔP) = ${res.internalPct.toFixed(2)}% - ${res.boardPct.toFixed(2)}% = ${res.deltaP.toFixed(2)}%\n`;
 
         if (res.isDeducted) {
-            logText += `  Penalty Factor = (${res.deltaP.toFixed(2)} - 20) / 200 = ${res.penaltyFactor.toFixed(5)}\n`;
-            logText += `  Marks Deducted = ${res.internalObtained} * ${res.penaltyFactor.toFixed(5)} = ${res.marksDeducted.toFixed(2)}\n`;
+            statusBox.className = "status-box deducted";
+            statusHeading.textContent = "Deduction Triggered";
+            statusBadge.textContent = `-${res.marksDeducted.toFixed(2)} Marks`;
+            statusText.textContent = `The percentage gap (${res.deltaP.toFixed(2)}%) exceeds the 20% limit by ${(res.deltaP - 20).toFixed(2)}%. A penalty of ${res.penaltyPct.toFixed(2)}% was applied to your internal marks.`;
         } else {
-            logText += `  No penalty applied.\n`;
+            statusBox.className = "status-box safe";
+            statusHeading.textContent = "Safe Zone";
+            statusBadge.textContent = "0 Marks Deducted";
+            statusText.textContent = `Your score gap (${res.deltaP.toFixed(2)}%) is within the 20% allowance threshold. No internal mark reduction applied.`;
+        }
+
+        // Update calculation log
+        let logText = `Step 1: Calculate Percentages
+`;
+        logText += `  Board Exam: (${res.boardObtained} / ${res.boardFull}) * 100 = ${res.boardPct.toFixed(2)}%
+`;
+        logText += `  Internal Assessment: (${res.internalObtained} / ${res.internalFull}) * 100 = ${res.internalPct.toFixed(2)}%
+
+`;
+        logText += `Step 2: Check Percentage Difference
+`;
+        logText += `  ΔP = ${res.internalPct.toFixed(2)}% - ${res.boardPct.toFixed(2)}% = ${res.deltaP.toFixed(2)}%
+
+`;
+
+        if (res.isDeducted) {
+            logText += `Step 3: Calculate Excess & Penalty Factor
+`;
+            logText += `  Excess Gap = ${res.deltaP.toFixed(2)}% - 20.00% = ${(res.deltaP - 20).toFixed(2)}%
+`;
+            logText += `  Penalty Factor = ${(res.deltaP - 20).toFixed(2)} / 200 = ${res.penaltyFactor.toFixed(5)} (${res.penaltyPct.toFixed(2)}% reduction)
+
+`;
+            logText += `Step 4: Compute Adjusted Score
+`;
+            logText += `  Deducted Amount = ${res.internalObtained} * ${res.penaltyFactor.toFixed(5)} = ${res.marksDeducted.toFixed(3)} marks
+`;
+            logText += `  Adjusted Internal = ${res.internalObtained} - ${res.marksDeducted.toFixed(3)} = ${res.adjustedInternal.toFixed(3)} / ${res.internalFull}`;
+        } else {
+            logText += `Step 3: Verification
+`;
+            logText += `  Since ΔP (${res.deltaP.toFixed(2)}%) <= 20.00%, no excess penalty is applied.
+`;
+            logText += `  Adjusted Internal = ${res.internalObtained.toFixed(2)} / ${res.internalFull}`;
         }
 
         document.getElementById("formulaLog").textContent = logText;
     }
 
+    // Initialize on page load
     document.addEventListener("DOMContentLoaded", calculateMarks);
 </script>
 </body>
